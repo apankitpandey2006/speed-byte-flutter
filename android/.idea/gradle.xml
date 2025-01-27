@@ -7,26 +7,27 @@
         <compositeConfiguration>
           <compositeBuild compositeDefinitionSource="SCRIPT">
             <builds>
-              <build path="$PROJECT_DIR$/../../../SDKs/Flutter/flutter/packages/flutter_tools/gradle" name="gradle">
+              <build path="/opt/homebrew/Caskroom/flutter/3.24.5/flutter/packages/flutter_tools/gradle" name="gradle">
                 <projects>
-                  <project path="$PROJECT_DIR$/../../../SDKs/Flutter/flutter/packages/flutter_tools/gradle" />
+                  <project path="/opt/homebrew/Caskroom/flutter/3.24.5/flutter/packages/flutter_tools/gradle" />
                 </projects>
               </build>
             </builds>
           </compositeBuild>
         </compositeConfiguration>
+        <option name="testRunner" value="CHOOSE_PER_TEST" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="gradleJvm" value="jbr-17" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$/../../../SDKs/Flutter/flutter/packages/flutter_tools/gradle" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/android_package_manager-0.7.1/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/device_info_plus-11.2.1/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/mobile_device_identifier-0.0.3/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/usage_stats-1.2.0/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/workmanager-0.5.2/android" />
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/android_package_manager-0.7.1/android" />
-            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/device_info_plus-11.2.1/android" />
-            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/mobile_device_identifier-0.0.3/android" />
-            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/usage_stats-1.2.0/android" />
-            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/workmanager-0.5.2/android" />
+            <option value="/opt/homebrew/Caskroom/flutter/3.24.5/flutter/packages/flutter_tools/gradle" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

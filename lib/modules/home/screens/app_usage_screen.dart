@@ -49,34 +49,36 @@ class _AppUsageScreenState extends State<AppUsageScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          date,
-                          style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 8),
-                        ...usages.map((appUsage) {
-                          return ListTile(
-                            leading: appUsage.appIconByte != null
-                                ? Image.memory(
-                                    appUsage.appIconByte!,
-                                    width: 40,
-                                    height: 40,
-                                  )
-                                : const Icon(Icons.apps),
-                            title: Text(appUsage.appName),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                    "Start Time: ${appUsage.time.toString().substring(0, 19)}"),
-                                Text(
-                                    "End Time: ${appUsage.time.add(Duration(seconds: appUsage.durationInSeconds)).toString().substring(0, 19)}"),
-                                Text("Duration: ${appUsage.durationInText}"),
-                              ],
-                            ),
-                          );
-                        }),
+                        // Text(
+
+                        //   date,
+                        //   style: const TextStyle(
+                        //       fontSize: 20, fontWeight: FontWeight.bold),
+                        // ),
+                        // const SizedBox(height: 8),
+                        // ...usages.map((appUsage) {
+                        //   return ListTile(
+                        //     leading: appUsage.appIconByte != null
+                        //         ? Image.memory(
+                        //             appUsage.appIconByte!,
+                        //             width: 40,
+                        //             height: 40,
+                        //           )
+                        //         : const Icon(Icons.apps),
+                        //     title: Text(appUsage.appName),
+                        //     subtitle: Column(
+                        //       crossAxisAlignment: CrossAxisAlignment.start,
+                        //       children: [
+                        //         Text(
+                        //             "Start Time: ${appUsage.time.toString().substring(0, 19)}"),
+                        //         Text(
+                        //             "End Time: ${appUsage.time.add(Duration(seconds: appUsage.durationInSeconds)).toString().substring(0, 19)}"),
+                        //         Text("Duration: ${appUsage.durationInText}"),
+                        //       ],
+                        //     ),
+                        //   );
+                        // }),
+                        Text("Welcome to Speed AV")
                       ],
                     ),
                   ),

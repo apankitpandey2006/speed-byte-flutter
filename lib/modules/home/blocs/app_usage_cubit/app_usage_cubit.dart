@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
+import 'package:permission_handler/permission_handler.dart';
 import 'package:usage_stats/usage_stats.dart';
 
 import '../../../../main.dart';
@@ -24,37 +25,42 @@ class AppUsageCubit extends Cubit<AppUsageState> {
 
   late DeviceInfoPlugin _deviceInfoPlugin;
   late AndroidPackageManager _androidPackageManager;
+  late String _deviceId;
+
   final Map<int, String> eventTypeMap = {
     1: 'Activity Resumed',
     2: 'Activity Paused',
     3: 'Activity Stopped',
   };
+
   final List<String> eventTypeForDurationList = [
     'Activity Resumed',
     'Activity Paused',
     'Activity Stopped',
   ];
+
   final List<String> _trackedPackages = [
-    // 'com.example.alphabet_app',
-    // 'com.example.varnmala_app',
-    // 'com.DivineLab.Alphabet_BlackWhite',
-    // 'com.DivineLab.Varnamala',
-    "com.google.android.youtube",
+    'com.example.alphabet_app',
+    'com.example.varnmala_app',
+    'com.DivineLab.Alphabet_BlackWhite',
+    'com.DivineLab.Varnamala',
   ];
 
-  void checkPermission() async {
+  Future<bool> checkPermission() async {
     emit(state.copyWith(isLoading: true));
     final isAppUsagePermissionGranted = await UsageStats.checkUsagePermission();
     if (isAppUsagePermissionGranted == null ||
         isAppUsagePermissionGranted == false) {
       await UsageStats.grantUsagePermission();
       emit(state.copyWith(isAppUsagePermissionGranted: true, isLoading: false));
+      return false;
+    } else {
+      emit(state.copyWith(isAppUsagePermissionGranted: true, isLoading: false));
+      return true;
     }
-    emit(state.copyWith(isLoading: false));
   }
 
   Future<void> sendDeviceInfoToApi() async {
-    // Since only android is required
     final deviceInfo = await _deviceInfoPlugin.androidInfo;
 
     final url = Uri.parse('https://speed-byte.onrender.com/devices');
@@ -71,19 +77,18 @@ class AppUsageCubit extends Cubit<AppUsageState> {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        scaffoldStateKey.currentState!.showSnackBar(
-          const SnackBar(
-              content: Text('Device info successfully sent to API.')),
+        scaffoldStateKey.currentState?.showSnackBar(
+          SnackBar(content: Text('${DateTime.now()}')),
         );
       } else {
-        scaffoldStateKey.currentState!.showSnackBar(
+        scaffoldStateKey.currentState?.showSnackBar(
           SnackBar(
               content: Text(
                   'Failed to send device info. Status: ${response.reasonPhrase} ${response.statusCode}')),
         );
       }
     } catch (e) {
-      scaffoldStateKey.currentState!.showSnackBar(
+      scaffoldStateKey.currentState?.showSnackBar(
         SnackBar(content: Text('Error sending device info: $e')),
       );
     }
@@ -173,48 +178,52 @@ class AppUsageCubit extends Cubit<AppUsageState> {
     });
 
     emit(state.copyWith(isLoading: false, appUsageByDate: appUsageByDate));
+
+    final deviceInfo = await _deviceInfoPlugin.androidInfo;
+    _deviceId = deviceInfo.id;
+    await _sendDataToApi(appUsageByDate);
+  }
+
+  Future<void> _sendDataToApi(
+      Map<String, List<AppUsage>> appUsageByDate) async {
+    final url = Uri.parse('https://speed-byte.onrender.com/usage-data');
+    List<Map<String, dynamic>> dataToSend =
+        appUsageByDate.entries.expand((entry) {
+      return entry.value.map((appUsage) {
+        return {
+          'app_name': appUsage.appName,
+          'start_time': appUsage.time.toIso8601String(),
+          'end_time': appUsage.time
+              .add(Duration(seconds: appUsage.durationInSeconds))
+              .toIso8601String(),
+          'android_id': _deviceId,
+        };
+      });
+    }).toList();
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'usageData': dataToSend}),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        scaffoldStateKey.currentState?.showSnackBar(
+            // const SnackBar(content: Text('App usage data sent successfully!')),
+            const SnackBar(content: Text('Welcome')));
+      } else {
+        // scaffoldStateKey.currentState?.showSnackBar(
+        //     // SnackBar(
+        //     //     content: Text(
+        //     //         'Failed to send data. Status: ${response.reasonPhrase} ${response.statusCode}')),
+
+        //     );
+      }
+    } catch (e) {
+      // scaffoldStateKey.currentState?.showSnackBar(
+      //  SnackBar(content: Text('Error sending app usage data: $e')),
+      // );
+    }
   }
 }
-
-// Future<void> _sendDataToApi() async {
-//     final url = Uri.parse('http://10.0.2.2:3000/usage-data');
-//     List<Map<String, dynamic>> dataToSend =
-//         _appUsageByDate.entries.expand((entry) {
-//       String date = entry.key;
-//       return entry.value.map((appUsage) {
-//         return {
-//           'app_name': appUsage.appName,
-//           'start_time': appUsage.time.toIso8601String(), // Use local time
-//           'end_time': appUsage.time
-//               .add(Duration(seconds: appUsage.durationInSeconds))
-//               .toIso8601String(), // Use local time
-//           'android_id': _deviceId,
-//         };
-//       });
-//     }).toList();
-
-//     try {
-//       debugPrint('Data to send: $dataToSend');
-//       final response = await http.post(
-//         url,
-//         headers: {'Content-Type': 'application/json'},
-//         body: jsonEncode({'usageData': dataToSend}),
-//       );
-//       debugPrint('Response: ${response.body}');
-//       if (response.statusCode == 200 || response.statusCode == 201) {
-//         ScaffoldMessenger.of(context).showSnackBar(
-//           const SnackBar(content: Text('Data successfully sent to API.')),
-//         );
-//       } else {
-//         ScaffoldMessenger.of(context).showSnackBar(
-//           SnackBar(
-//               content: Text(
-//                   'Failed to send data. Status: ${response.reasonPhrase} ${response.statusCode}')),
-//         );
-//       }
-//     } catch (e) {
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(content: Text('Error sending data: $e')),
-//       );
-//     }
-//   }

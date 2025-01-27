@@ -29,4 +29,23 @@ class AppUtils {
       },
     );
   }
+
+  final Map<int, String> eventTypeMap = {
+    1: 'Activity Resumed',
+    2: 'Activity Paused',
+    3: 'Activity Stopped',
+  };
+
+  final List<String> eventTypeForDurationList = [
+    'Activity Resumed',
+    'Activity Paused',
+    'Activity Stopped',
+  ];
+
+  final List<String> trackedPackages = [
+    'com.example.alphabet_app',
+    'com.example.varnmala_app',
+    'com.DivineLab.Alphabet_BlackWhite',
+    'com.DivineLab.Varnamala',
+  ];
 }
