@@ -25,6 +25,8 @@ dependencies:
   gap: ^3.0.1
   logger: ^2.5.0
   permission_handler: ^11.3.1
+  flutter_secure_storage: ^8.0.0
+  geolocator: ^8.0.0
 
 dev_dependencies:
   flutter_test:

@@ -17,7 +17,7 @@ class _AppUsageScreenState extends State<AppUsageScreen> {
     super.initState();
     context.read<AppUsageCubit>()
       ..checkPermission()
-      ..sendDeviceInfoToApi()
+      // ..sendDeviceInfoToApi()
       ..getAllAppUsageInfo();
   }
 

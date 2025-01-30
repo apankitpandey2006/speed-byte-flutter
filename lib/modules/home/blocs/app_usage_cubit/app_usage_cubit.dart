@@ -8,6 +8,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:usage_stats/usage_stats.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../../../../main.dart';
 import '../../../../models/app_event.dart';
